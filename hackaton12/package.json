@@ -1,0 +1,12 @@
+{
+  "name": "hackaton12",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
+  }
+}
