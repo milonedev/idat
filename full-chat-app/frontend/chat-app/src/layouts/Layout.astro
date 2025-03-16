@@ -1,0 +1,22 @@
+---
+import Navbar from "../components/Navbar";
+import "../styles/global.css";
+
+// const {user, setToken} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Chat App</title>
+	</head>
+	<body class="bg-gradient-to-b from-gray-900 to-gray-600 flex-1">
+		<!-- Navbar -->
+		 <!-- <Navbar client:load user={user} setToken={setToken} /> -->
+		<slot />
+	</body>
+</html>

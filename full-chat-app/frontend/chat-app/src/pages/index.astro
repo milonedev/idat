@@ -1,0 +1,51 @@
+---
+import ChatWindow from '../components/ChatWindow';
+import UserList from '../components/UserList';
+import Layout from '../layouts/Layout.astro';
+import { connectSocket } from '../uttils/socket'; // Note: 'uttils' seems like a typo, should be 'utils'?
+
+// Get token from cookies (server-side)
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2Q2MDQ2MjE1NTM2MGM1YzJjMTA4NTQiLCJpYXQiOjE3NDIwODM0MjcsImV4cCI6MTc0MjE2OTgyN30.pUojjSiX10loOu0W7Gew4BEX4pQ56K5IKs-bXD4bMFc'
+
+if (!token) {
+//   return Astro.redirect('/login');
+}
+
+let user = null;
+try {
+  const res = await fetch('http://localhost:3000/api/login/renew', {
+    headers: token ? { 'x-token': token } : {} // Ensure token is defined before using it
+  });
+
+  if (!res.ok) {
+    console.error(`HTTP error! Status: ${res.status}`);
+    // return Astro.redirect('/login');
+  }
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    // Assuming your API returns { ok: false } on failure
+    return Astro.redirect('/login');
+  }
+
+  user = data.usuario;
+} catch (error) {
+  console.error('Error fetching user:', error);
+//   return Astro.redirect('/login');
+}
+---
+
+<Layout>
+  <UserList client:load setSelectedUser={() => {}} />
+  <ChatWindow client:load selectedUser={null} currentUser={user} socket={connectSocket(token)} />
+</Layout>
+
+<script>
+  // Note: React's useState won't work here directly in Astro's script tag
+  // Move this to a client-side component if you need React state
+  let selectedUser = null;
+  function setSelectedUser(user:any) {
+    selectedUser = user;
+  }
+</script>

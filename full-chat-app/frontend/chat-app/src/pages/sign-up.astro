@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+	<main class="w-full h-screen grid place-content-center">
+		<!-- Card of login -->
+		 <div class="bg-white shadow-white flex flex-col py-10 px-12 rounded-lg gap-2 min-w-sm">
+			<div class="flex w-full h-auto items-center justify-center">
+				<h1 class="text-6xl font-bold">REGISTER</h1>
+			</div>
+            <div>
+				<label for="last_name" class="text-sm font-medium text-gray-900">Nombre:</label>
+				<input type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese su nombre" required />
+			</div>
+
+			<div>
+				<label for="last_name" class="text-sm font-medium text-gray-900">Email:</label>
+				<input type="text" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese su email" required />
+			</div>
+
+			<div>
+				<label for="last_name" class="text-sm font-medium text-gray-900">Password:</label>
+				<input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese su contrasena" required />
+			</div>
+
+			<button id="send-button" class="mt-2 text-white bg-blue-500 py-2 px-6 uppercase shadow-2xl shadow-blue-400 rounded-lg hover:text-blue-500 border border-blue-500 hover:bg-white duration-300 ease-in-out transition-colors cursor-pointer">Send</button>
+
+			<div class="w-full text-sm py-8 flex flex-col items-center justify-center">
+				<a href="/" class="text-blue-400">ya tengo una cuenta ?</a>
+			</div>
+		 </div>
+	</main>
+</Layout>
+<script>
+    const nameInput = document.getElementById('name') as HTMLInputElement;
+    const emailinput = document.getElementById('email') as HTMLInputElement;
+    const passwordInput =  document.getElementById('password') as HTMLInputElement;
+
+    const send = document.getElementById('send-button') as HTMLElement;
+
+    // Escuchar el evento click
+
+    send.addEventListener('click', () => {
+
+        const name = nameInput.value ;
+        const email = emailinput.value;
+        const password = passwordInput.value;
+
+        if(name && email && password) {
+            sendUser(name, email, password)
+        }
+    })
+
+    const sendUser = async(name: string, email: string, password: string) => {
+        const res = await fetch('http://localhost:3000/api/login/new', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({name, email, password})
+        })
+
+        if(!res.ok) {
+            alert('Algo asilo mal')
+            throw new Error(`Http Error. ${res.status}`)
+        }
+
+        const response = await res.json()
+
+        if (response) {
+            localStorage.setItem('token', response.token);
+            window.location.href = '/'
+        }
+        
+        return response
+    }
+</script>
